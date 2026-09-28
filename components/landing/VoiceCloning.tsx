@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 export default function VoiceCloning() {
-  const wipeTransition = { duration: 1.2, ease: [0.16, 1, 0.3, 1] };
+  const wipeTransition: object = { duration: 1.2, ease: [0.16, 1, 0.3, 1] };
 
   return (
     <section
