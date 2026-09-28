@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Omnipresence — landing page
 
-## Getting Started
+A Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS v4 + Motion
+landing page for "Omnipresence," a brand-voice content-repurposing SaaS:
+paste a YouTube link or a blog post, get a tweet thread, a LinkedIn carousel,
+and a newsletter — written in the user's own voice.
 
-First, run the development server:
+Stack versions, current as of this build:
+
+| Package | Version |
+|---|---|
+| next | 16.3.0 |
+| react / react-dom | ^19.2.0 |
+| tailwindcss / @tailwindcss/postcss | ^4.3.3 |
+| motion (formerly framer-motion) | ^12.29.2 |
+| typescript | ^5.9.3 |
+
+Tailwind v4 is CSS-first here — there's no `tailwind.config.ts`. All tokens
+(colors, fonts, the `max-w-content` container, radii) are declared in
+`app/globals.css` under `@theme`, and Tailwind generates the matching
+utilities (`bg-signal`, `font-display`, `rounded-lg`, etc.) automatically.
+
+## Run it locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To build for production:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+  layout.tsx      — fonts (Fraunces + Space Grotesk), metadata
+  page.tsx         — assembles all sections
+  globals.css      — Tailwind v4 @theme tokens, base styles, focus states, reduced-motion handling
+components/
+  Nav.tsx
+  Hero.tsx              — the "one source → three outputs" demo, animates in once on load
+  ProblemStatement.tsx
+  HowItWorks.tsx
+  VoiceCloning.tsx      — dark section: upload-your-writing feature + anti-cliché callout
+  PlatformShowcase.tsx  — thread / carousel / email mockups
+  Testimonials.tsx
+  Pricing.tsx
+  FinalCTA.tsx
+  Footer.tsx
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Palette**: cool paper (`#EDF0F1`) and near-black ink (`#12151B`) for the
+  light sections, a night-navy (`#0F1116`) inversion for two sections to give
+  the page rhythm, and a single accent — signal blue (`#3654FF`) — used for
+  every interactive/highlight moment. Ember (`#FF5B39`) appears exactly once,
+  on the crossed-out cliché line in the voice section.
+- **Type**: Fraunces (serif, editorial, a little wonky) carries headlines and
+  personality; Space Grotesk handles UI text and body copy, echoing the
+  "engine/platform" side of the product.
+- **Motion**: the hero's source-to-three-outputs sequence is the one
+  orchestrated moment on the page and only plays once, on load. Everything
+  below uses a single lightweight `whileInView` (once) rather than stacking
+  fade-ups on every section, and hover states are reserved for things that
+  are actually interactive.
+- Swap the placeholder testimonial names/quotes and pricing figures for real
+  ones before shipping.
