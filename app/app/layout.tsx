@@ -59,7 +59,7 @@ export default function DashboardLayout({
 
   return (
     <div className="h-[100dvh] w-full flex bg-paper text-ink font-sans overflow-hidden">
-      {/* 1. Left Sidebar (Fixed) */}
+      {/* Left Sidebar (Fixed) */}
       <aside className="hidden rounded-lg md:flex flex-col w-64 h-full shrink-0 border-r border-ink/10 bg-white shadow-[4px_0_24px_rgba(18,21,27,0.02)] z-20 relative">
         <div className="h-20 shrink-0 flex items-center px-6 gap-3 border-b border-ink/5">
           <div className="w-8 h-8 rounded-lg bg-signal flex items-center justify-center shadow-lg shadow-signal/20">
@@ -263,8 +263,8 @@ export default function DashboardLayout({
       </AnimatePresence>
 
       {/* Main Content Area (Scrollable) */}
-      <main className="flex-1 h-full overflow-y-auto relative bg-[radial-gradient(ellipse_at_top_right,_var(--color-signal)_0%,_transparent_50%)] bg-no-repeat bg-[length:600px_600px] bg-[position:100%_-200px] opacity-90">
-        <div className="pt-20 md:pt-0 max-w-5xl mx-auto p-5 sm:p-8 xl:p-12 min-h-full">
+      <main className="flex-1 h-full  overflow-y-auto relative bg-[radial-gradient(ellipse_at_top_right,_var(--color-signal)_0%,_transparent_50%)] bg-no-repeat bg-[length:600px_600px] bg-[position:100%_-200px] opacity-90">
+        <div className="pt-20  max-w-5xl mx-auto p-5 sm:p-8 xl:p-12 min-h-full">
           {children}
         </div>
       </main>
