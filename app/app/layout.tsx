@@ -73,7 +73,7 @@ export default function DashboardLayout({
             </svg>
           </div>
           <span className="font-display font-bold text-xl tracking-tight text-ink">
-            Fractal
+            Lexisync
           </span>
         </div>
 
@@ -82,7 +82,9 @@ export default function DashboardLayout({
             Menu
           </div>
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive =
+              pathname === item.href ||
+              (pathname.startsWith(item.href) && item.href !== "/app");
             const Icon = item.icon;
             return (
               <Link
@@ -189,7 +191,7 @@ export default function DashboardLayout({
             </svg>
           </div>
           <span className="font-display font-bold text-lg text-ink tracking-tight">
-            Fractal
+            Lexisync
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -260,15 +262,15 @@ export default function DashboardLayout({
         )}
       </AnimatePresence>
 
-      {/* 3. Main Content Area (Scrollable) */}
+      {/* Main Content Area (Scrollable) */}
       <main className="flex-1 h-full overflow-y-auto relative bg-[radial-gradient(ellipse_at_top_right,_var(--color-signal)_0%,_transparent_50%)] bg-no-repeat bg-[length:600px_600px] bg-[position:100%_-200px] opacity-90">
         <div className="pt-20 md:pt-0 max-w-5xl mx-auto p-5 sm:p-8 xl:p-12 min-h-full">
           {children}
         </div>
       </main>
 
-      {/* 4. XL Right Sidebar: Activity Hub */}
-      <aside className="hidden xl:flex flex-col w-72 h-full shrink-0 border-l border-ink/10 bg-white/40 backdrop-blur-md shadow-[-4px_0_24px_rgba(18,21,27,0.01)] z-10 relative">
+      {/*XL: Right Sidebar: Activity Hub */}
+      <aside className="hidden xl:flex flex-col w-72 h-full shrink-0 border-l rounded-l-xl border-ink/10 bg-white/40 backdrop-blur-md shadow-[-4px_0_24px_rgba(18,21,27,0.01)] z-10 relative">
         <div className="h-20 shrink-0 flex items-center justify-between px-6 border-b border-ink/5">
           <span className="text-sm font-semibold text-ink">Activity Hub</span>
           <div className="relative">
