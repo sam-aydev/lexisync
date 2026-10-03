@@ -119,7 +119,7 @@ const cardVariants: Variants = {
 
 export default function Features() {
   return (
-    <section className="py-16 md:py-32 px-5 lg:px-24 bg-paper text-ink relative overflow-hidden">
+    <section className="py-8 md:py-32 px-5 lg:px-24 bg-paper text-ink relative overflow-hidden">
       {/* Subtle Background Elements */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-ink/10 to-transparent" />
       <div className="absolute top-1/4 left-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-signal/5 blur-[100px] md:blur-[120px] rounded-full pointer-events-none -translate-x-1/2" />

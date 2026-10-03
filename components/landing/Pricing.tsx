@@ -1,47 +1,52 @@
 "use client";
 
 import { motion, Variants } from "motion/react";
+import { useRouter } from "next/navigation";
 
 const tiers = [
   {
-    name: "Starter",
+    name: "Free",
     price: "$0",
     period: "forever",
-    description: "Perfect for testing the engine.",
+    description: "Perfect for testing the waters and exploring the engine.",
     features: [
-      "3 repurposes / month",
-      "Thread + carousel + email",
-      "Voice profile (1 slot)",
+      "5 Generations / month",
+      "3 Brand Voice Profile",
+      "Standard Social Platforms",
+      "Standard processing speed",
     ],
     cta: "Start free",
     highlighted: false,
   },
   {
-    name: "Creator",
-    price: "$29",
+    name: "Starter",
+    price: "$19",
     period: "/ month",
-    description: "For founders scaling their voice.",
+    description:
+      "For creators who post consistently across multiple platforms.",
     features: [
-      "Unlimited repurposes",
-      "Up to 5 voice profiles",
-      "Custom carousel branding",
-      "Priority processing",
+      "150 Generations / month",
+      "5 Brand Voice Profiles",
+      "All Platforms + Newsletter",
+      "High-priority processing",
+      "API Access (Basic)",
     ],
-    cta: "Start 14-day trial",
+    cta: "Upgrade to Starter",
     highlighted: true,
   },
   {
-    name: "Team",
-    price: "$89",
+    name: "Premium",
+    price: "$49",
     period: "/ month",
-    description: "For agencies and marketing teams.",
+    description: "Uncapped volume and dedicated compute for agencies & teams.",
     features: [
-      "Everything in Creator",
-      "5 seats included",
-      "Shared voice library",
-      "Approval workflow",
+      "500 Generations / month",
+      "15 Brand Voices",
+      "Lightning Fast Processing",
+      "Custom Platform Formats",
+      "Team Collaboration",
     ],
-    cta: "Talk to us",
+    cta: "Upgrade to Premium",
     highlighted: false,
   },
 ];
@@ -64,10 +69,11 @@ const cardVariants: Variants = {
 };
 
 export default function Pricing() {
+  const  {replace} = useRouter()
   return (
     <section
       id="pricing"
-      className="relative mx-auto max-w-[var(--container-content)] px-6 lg:px-24 py-24 md:py-32 overflow-hidden"
+      className="relative mx-auto max-w-[var(--container-content)] px-6 lg:px-24 py-14 md:pt-26 overflow-hidden"
     >
       {/* Background abstract element */}
       <div className="absolute top-0 right-0 -mr-32 -mt-32 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,_var(--color-signal)_0%,_transparent_60%)] opacity-[0.03] pointer-events-none" />
@@ -108,7 +114,7 @@ export default function Pricing() {
             }`}
           >
             {tier.highlighted && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-signal px-4 py-1 text-[11px] font-bold uppercase tracking-widest text-white shadow-sm">
+              <div className="absolute text-center -top-3 left-1/2 -translate-x-1/2 rounded-full bg-signal px-4 py-1 text-[11px] font-bold uppercase tracking-widest text-white shadow-sm">
                 Most Popular
               </div>
             )}
@@ -166,9 +172,10 @@ export default function Pricing() {
             </ul>
 
             <button
-              className={`w-full rounded-full py-4 text-[15px] font-medium transition-all duration-300 ${
+            onClick={()=> replace("/auth/signup")}
+              className={`w-full cursor-pointer rounded-full py-2 text-[15px] font-medium transition-all duration-300 ${
                 tier.highlighted
-                  ? "bg-signal text-white hover:bg-signal-dim shadow-[0_4px_14px_0_rgba(54,84,255,0.39)] hover:shadow-[0_6px_20px_rgba(54,84,255,0.23)] hover:-translate-y-0.5"
+                  ? "bg-signal text-white hover:bg-green-700 shadow-[0_4px_14px_0_rgba(54,84,255,0.39)] hover:shadow-[0_6px_20px_rgba(54,84,255,0.23)] hover:-translate-y-0.5"
                   : "bg-white text-ink border border-ink/10 hover:bg-paper hover:border-ink/20"
               }`}
             >

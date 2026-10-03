@@ -1,20 +1,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation"; // 1. Import usePathname
 
-const links = [
-  { href: "#how-it-works", label: "How it works" },
-  { href: "/blog", label: "Blog" },
-  { href: "#features", label: "Features" },
-  { href: "#pricing", label: "Pricing" },
+// Base links array
+const allLinks = [
+  { href: "/#how-it-works", label: "How it works", hash: true },
+  { href: "/blog", label: "Blog", hash: false },
+  { href: "/#features", label: "Features", hash: true },
+  { href: "/#pricing", label: "Pricing", hash: true },
+  { href: "/about", label: "About Us", hash: false },
+  
 ];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  // 2. Get the current pathname
+  const pathname = usePathname();
 
   // Detect scroll position to elevate the nav
   useEffect(() => {
@@ -24,6 +31,17 @@ export default function Nav() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const MotionLink = motion.create(Link);
+
+  // 3. Conditionally filter links based on the route
+  // If the user is on the home page ("/"), show all links.
+  // If they are on any other page (like /blog or /auth), hide the hash sections.
+  const isHomePage = pathname === "/";
+  const activeLinks = allLinks.filter((link) => {
+    if (isHomePage) return true;
+    return !link.hash; // Hide hash links on non-home pages
+  });
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 flex justify-center px-4 pt-3 transition-all duration-300 pointer-events-none md:pt-5">
@@ -39,34 +57,31 @@ export default function Nav() {
           {/* Logo with micro-hover spring */}
           <Link href="/" className="group flex items-center gap-3">
             <motion.div
-              whileHover={{ rotate: 180 }}
+              whileHover={{ rotate: 20 }}
               transition={{ type: "spring", stiffness: 260, damping: 20 }}
               className="relative flex items-center justify-center"
             >
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 26 26"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M2 13C2 13 6 5 13 5C20 5 24 13 24 13"
-                  className="stroke-signal transition-all duration-300 group-hover:stroke-ember"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M2 13C2 13 6 21 13 21C20 21 24 13 24 13"
-                  className="stroke-ink transition-all duration-300 group-hover:stroke-signal"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                />
-                <circle cx="13" cy="13" r="2.5" className="fill-signal" />
-              </svg>
+              <div className="size-9 md:size-12 rounded-full bg-linear-to-tr from-green-700 to-signal flex items-center justify-center shadow-lg shadow-signal/20">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M4 17C4 17 8 7 16 7"
+                    stroke="#FFFFFF"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeOpacity="0.4"
+                  ></path>
+                  <path
+                    d="M8 21C8 21 12 11 20 11"
+                    stroke="#FFFFFF"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                  ></path>
+                  <circle cx="20" cy="11" r="2" fill="#FFFFFF"></circle>
+                </svg>
+              </div>
             </motion.div>
-            <span className="font-display text-lg md:text-sm lg:text-lg font-bold tracking-tight text-ink transition-colors group-hover:text-signal">
-              Lexisync
+            <span className="font-display text-lg md:text-sm lg:text-lg font-bold tracking-tight text-ink transition-colors ">
+              Sociarig
             </span>
           </Link>
 
@@ -75,8 +90,8 @@ export default function Nav() {
             onMouseLeave={() => setHoveredIdx(null)}
             className="hidden items-center gap-1 rounded-full border border-ink/5 bg-ink/[0.03] p-1.5 md:flex"
           >
-            {links.map((link, idx) => (
-              <a
+            {activeLinks.map((link, idx) => (
+              <Link
                 key={link.href}
                 href={link.href}
                 onMouseEnter={() => setHoveredIdx(idx)}
@@ -90,24 +105,24 @@ export default function Nav() {
                   />
                 )}
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
           {/* CTA & Auth Area */}
           <div className="hidden items-center gap-3 md:flex">
             <Link
-              href="/auth"
+              href="/auth/login"
               className="px-3.5 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:text-ink"
             >
               Log in
             </Link>
 
-            <motion.a
-              href="#pricing"
+            <MotionLink
+              href="/auth/signup"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-ink px-5 py-2 text-sm font-medium text-paper transition-all hover:bg-signal hover:shadow-[0_4px_20px_rgba(54,84,255,0.35)]"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-ink px-5 py-2 text-sm font-medium text-paper transition-all hover:bg-green-700 hover:shadow-[0_4px_20px_rgba(54,84,255,0.35)]"
             >
               <span>Start free</span>
               <svg
@@ -124,7 +139,7 @@ export default function Nav() {
                 <path d="M5 12h14" />
                 <path d="m12 5 7 7-7 7" />
               </svg>
-            </motion.a>
+            </MotionLink>
           </div>
 
           {/* Mobile Morphing Hamburger Button */}
@@ -160,7 +175,7 @@ export default function Nav() {
               className="overflow-hidden border-t border-ink/10 px-6 pb-6 pt-3 md:hidden"
             >
               <nav className="flex flex-col space-y-2">
-                {links.map((link, idx) => (
+                {activeLinks.map((link, idx) => (
                   <motion.a
                     key={link.href}
                     href={link.href}
@@ -177,14 +192,14 @@ export default function Nav() {
 
                 <div className="my-2 border-t border-ink/10 pt-3 flex flex-col gap-2.5">
                   <Link
-                    href="/auth"
+                    href="/auth/login"
                     onClick={() => setOpen(false)}
                     className="w-full rounded-xl border border-ink/10 bg-white/60 py-2.5 text-center text-sm md:text-xs lg:text-sm font-medium text-ink"
                   >
                     Log in
                   </Link>
                   <Link
-                    href="#pricing"
+                    href="/#pricing"
                     onClick={() => setOpen(false)}
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-ink py-2.5 text-center text-sm md:text-xs lg:text-sm font-medium text-paper hover:bg-signal transition"
                   >

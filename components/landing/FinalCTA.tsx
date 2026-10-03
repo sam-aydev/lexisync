@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function FinalCTA() {
   return (
-    <section className="relative bg-paper text-ink overflow-hidden py-24 md:py-40 px-10 border-t border-ink/5">
+    <section className="relative bg-paper text-ink overflow-hidden py-3 md:py-40 px-10">
       {/* Ambient background glow optimized for light mode */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(ellipse_at_bottom,_var(--color-signal)_0%,_transparent_70%)] opacity-10 pointer-events-none blur-[80px]" />
 
@@ -44,8 +44,8 @@ export default function FinalCTA() {
 
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
             <Link
-              href="/auth"
-              className="group relative inline-flex items-center justify-center gap-3 rounded-full bg-signal px-9 py-4 text-base font-medium text-white transition-all duration-300 hover:bg-signal-dim hover:scale-[1.02] active:scale-[0.98] shadow-[0_10px_30px_-10px_rgba(54,84,255,0.5)]"
+              href="/auth/signup"
+              className="group relative inline-flex items-center justify-center gap-3 rounded-full bg-black px-9 py-4 text-base font-medium text-white transition-all duration-300 hover:bg-green-700 hover:scale-[1.02] active:scale-[0.98] shadow-[0_10px_30px_-10px_rgba(54,84,255,0.5)]"
             >
               <span>Start writing in your voice</span>
               <svg
@@ -95,7 +95,7 @@ export default function FinalCTA() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              Free trial generation
+              Affordable Pricing Plans
             </span>
             <span className="flex items-center gap-1.5">
               <svg
@@ -111,7 +111,7 @@ export default function FinalCTA() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              Claude Opus 5.5 powered
+              Sociarig AI Engine
             </span>
           </div>
         </motion.div>

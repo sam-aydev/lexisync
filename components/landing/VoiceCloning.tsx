@@ -8,7 +8,7 @@ export default function VoiceCloning() {
   return (
     <section
       id="voice"
-      className="relative bg-paper text-ink overflow-hidden py-16 md:py-32"
+      className="relative bg-paper text-ink overflow-hidden py-8 md:py-32"
     >
       {/* Background Abstract Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,21,27,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(18,21,27,0.04)_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_100%_100%_at_50%_50%,#000_10%,transparent_100%)] pointer-events-none" />

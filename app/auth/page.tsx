@@ -2,18 +2,61 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import Nav from "@/components/landing/Nav";
 import Footer from "@/components/landing/Footer";
+import { loginUser, signUpUser } from "../lib/util/actions/auth";
+import { useRouter } from "next/navigation";
 
-export default function Page() {
+export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [isLoading, setIsLoading] = useState(false);
+  const { replace, push } = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    // Add your server action or Supabase auth logic here
-    setTimeout(() => setIsLoading(false), 2000);
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      // Call the appropriate server action based on the active tab
+      const { error, route, success }: any =
+        mode === "login"
+          ? await loginUser(formData)
+          : await signUpUser(formData);
+
+      console.log(error);
+      if (error) {
+        toast.error(mode === "login" ? "Login Failed" : "Signup Failed", {
+          description: error,
+        });
+      } else if (success && route) {
+        // 3. ACTUAL REDIRECT TRIGGERED BY CLIENT
+        push(route);
+        toast.success("Welcome to Sociarig!");
+      } else if (mode === "signup") {
+        // If sign up doesn't return an error and requires email confirmation
+        // Note: You can remove this toast if you have auto-confirm enabled in Supabase
+        // toast.success("Check your email", {
+        //   description:
+        //     "We sent you a confirmation link to complete your setup.",
+        // });
+      }
+    } catch (error) {
+      console.log("Auth Exception:", error);
+
+      toast.error("An unexpected error occurred", {
+        // Force the toast to show the actual error message
+        description: error instanceof Error ? error.message : String(error),
+      });
+      // toast.error("An unexpected error occurred", {
+      //   description:
+      //     "Please try again or contact support if the issue persists.",
+      // });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -23,9 +66,8 @@ export default function Page() {
         <Nav />
       </div>
 
-      {/* 2. Ambient Background Effects (Safe for Mobile/Tablet) */}
+      {/* 2. Ambient Background Effects */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
-        {/* Subtle animated glowing orbs behind the auth card */}
         <motion.div
           animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.15, 0.1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
@@ -41,11 +83,10 @@ export default function Page() {
           }}
           className="absolute w-[70%] max-w-[400px] aspect-square bg-ember blur-[100px] lg:blur-[120px] rounded-full opacity-5 -translate-x-1/3 translate-y-1/3"
         />
-        {/* Grid pattern overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,21,27,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(18,21,27,0.03)_1px,transparent_1px)] bg-[size:30px_30px] lg:bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,#000_20%,transparent_100%)]" />
       </div>
 
-      {/* 3. Auth Form Container - Adjusted for lg screens */}
+      {/* 3. Auth Form Container */}
       <main className="flex-1 flex flex-col items-center justify-center pt-24 md:pt-36 pb-8 px-4 lg:px-6 relative z-10 w-full min-h-[500px]">
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.98 }}
@@ -69,20 +110,25 @@ export default function Page() {
           <div className="flex p-1 bg-paper border border-ink/5 rounded-xl mb-6 lg:mb-8 relative w-full overflow-hidden">
             <button
               type="button"
-              onClick={() => setMode("login")}
-              className={`flex-1 py-2.5 text-[13px] lg:text-sm font-medium transition-colors relative z-10 ${mode === "login" ? "text-ink" : "text-ink-soft hover:text-ink"}`}
+              onClick={() => {
+                setMode("login");
+                setIsLoading(false); // Reset loading state if switching modes rapidly
+              }}
+              className={`flex-1 cursor-pointer py-2.5 text-[13px] lg:text-sm font-medium transition-colors relative z-10 ${mode === "login" ? "text-ink" : "text-ink-soft hover:text-ink"}`}
             >
               Sign In
             </button>
             <button
               type="button"
-              onClick={() => setMode("signup")}
-              className={`flex-1 py-2.5 text-[13px] lg:text-sm font-medium transition-colors relative z-10 ${mode === "signup" ? "text-ink" : "text-ink-soft hover:text-ink"}`}
+              onClick={() => {
+                setMode("signup");
+                setIsLoading(false);
+              }}
+              className={`flex-1 cursor-pointer py-2.5 text-[13px] lg:text-sm font-medium transition-colors relative z-10 ${mode === "signup" ? "text-ink" : "text-ink-soft hover:text-ink"}`}
             >
               Sign Up
             </button>
 
-            {/* The animated background pill */}
             <motion.div
               layoutId="active-auth-tab"
               className="absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm border border-ink/5"
@@ -130,7 +176,7 @@ export default function Page() {
                   name="password"
                   placeholder="••••••••"
                   required
-                  minLength={8}
+                  minLength={6} // Supabase default minimum is 6
                   className="w-full px-3.5 py-3 lg:px-4 lg:py-3.5 bg-paper-dim/30 border border-ink/10 rounded-lg lg:rounded-xl text-[13px] lg:text-sm focus:outline-none focus:ring-2 focus:ring-signal/20 focus:border-signal transition-all shadow-sm placeholder:text-ink-faint"
                 />
               </div>
@@ -139,7 +185,7 @@ export default function Page() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 mt-2 bg-ink text-paper rounded-lg lg:rounded-xl font-medium text-[13px] lg:text-sm transition-all hover:bg-ink-soft hover:shadow-lg hover:shadow-ink/10 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none"
+              className="w-full cursor-pointer py-3.5 mt-2 bg-ink text-paper rounded-lg lg:rounded-xl font-medium text-[13px] lg:text-sm transition-all hover:bg-ink-soft hover:shadow-lg hover:shadow-ink/10 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none"
             >
               {isLoading ? (
                 <span className="w-4 h-4 lg:w-5 lg:h-5 border-2 border-paper/30 border-t-paper rounded-full animate-spin" />

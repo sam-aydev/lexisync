@@ -29,7 +29,7 @@ const itemVariants: Variants = {
 
 export default function PlatformShowcase() {
   return (
-    <section className="relative mx-auto max-w-[var(--container-content)] px-6 lg:px-24 py-24 md:px-10 md:py-32 overflow-hidden">
+    <section className="relative mx-auto max-w-[var(--container-content)] px-6 lg:px-24 py-8 md:px-10 md:py-32 overflow-hidden">
       {/* Subtle ambient background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-signal/5 rounded-full blur-[100px] pointer-events-none" />
 

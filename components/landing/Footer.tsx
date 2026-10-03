@@ -21,28 +21,26 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-2.5">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 26 26"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M2 13C2 13 6 5 13 5C20 5 24 13 24 13"
-                  stroke="#3654FF"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M2 13C2 13 6 21 13 21C20 21 24 13 24 13"
-                  stroke="#12151B"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <div className="size-9 md:size-12 rounded-full bg-linear-to-tr from-green-700 to-signal flex items-center justify-center shadow-lg shadow-signal/20">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M4 17C4 17 8 7 16 7"
+                    stroke="#FFFFFF"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeOpacity="0.4"
+                  ></path>
+                  <path
+                    d="M8 21C8 21 12 11 20 11"
+                    stroke="#FFFFFF"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                  ></path>
+                  <circle cx="20" cy="11" r="2" fill="#FFFFFF"></circle>
+                </svg>
+              </div>
               <span className="font-display text-lg text-ink font-medium tracking-wide">
-                Lexisync 
+                Sociarig
               </span>
             </div>
             <p className="text-sm text-ink-soft max-w-sm leading-relaxed">
@@ -61,25 +59,25 @@ export default function Footer() {
               <li>
                 <a
                   href="#how-it-works"
-                  className="hover:text-signal transition-colors font-medium"
+                  className="hover:text-green-700 transition-colors font-medium"
                 >
                   How it works
                 </a>
               </li>
               <li>
-                <a
+                <Link
                   href="#pricing"
-                  className="hover:text-signal transition-colors font-medium"
+                  className="hover:text-green-700 transition-colors font-medium"
                 >
                   Pricing Plans
-                </a>
+                </Link>
               </li>
               <li>
                 <Link
-                  href="/auth"
-                  className="hover:text-signal transition-colors font-medium"
+                  href="/auth/signup"
+                  className="hover:text-green-700 transition-colors font-medium"
                 >
-                  Sign In / Register
+                  Register
                 </Link>
               </li>
             </ul>
@@ -92,30 +90,30 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <a
+                <Link
                   href="https://twitter.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-signal transition-colors flex items-center gap-1.5 font-medium"
+                  className="hover:text-green-700 transition-colors flex items-center gap-1.5 font-medium"
                 >
                   Twitter / X <span className="text-xs text-signal">↗</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="hover:text-signal transition-colors font-medium"
+                <Link
+                  href="/privacy"
+                  className="hover:text-green-700 transition-colors font-medium"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="hover:text-signal transition-colors font-medium"
+                <Link
+                  href="/terms"
+                  className="hover:text-green-700 transition-colors font-medium"
                 >
                   Terms of Service
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -124,8 +122,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ink-soft">
           <p>
-            © {new Date().getFullYear()} Lexisync Engine. All rights
-            reserved.
+            © {new Date().getFullYear()} Sociarig Engine. All rights reserved.
           </p>
           <div className="flex items-center gap-2 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse" />

@@ -1,183 +1,255 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Link2,
-  Sparkles,
-  Copy,
-  Check,
-  RefreshCcw,
-  AudioLines,
-  Settings2,
-} from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { RefreshCcw, AudioLines, Sparkles } from "lucide-react";
 import ExportWorkflows from "@/components/dashboard/ExportWorkflows";
+import { useGenerator } from "@/app/lib/util/hooks/useGenerator";
+import GeneratorForm from "@/components/dashboard/GeneratorForm";
 
-type EngineState = "idle" | "processing" | "completed";
+// Custom highly-tuned spring and cubic-bezier easings for premium feel
+const EASE = [0.22, 1, 0.36, 1] as const;
+const SPRING: object = {
+  type: "spring",
+  stiffness: 300,
+  damping: 24,
+  mass: 0.8,
+};
 
 export default function GeneratorPage() {
-  const [url, setUrl] = useState("");
-  const [engineState, setEngineState] = useState<EngineState>("idle");
-  const [copied, setCopied] = useState<string | null>(null);
-
-  // Simulated Generation Process
-  const handleGenerate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!url) return;
-
-    setEngineState("processing");
-    // Simulate pipeline delay
-    setTimeout(() => {
-      setEngineState("completed");
-    }, 4000);
-  };
-
-  const handleCopy = (id: string) => {
-    setCopied(id);
-    setTimeout(() => setCopied(null), 2000);
-  };
+  const generatorProps = useGenerator();
+  const { engineState, inputMode, generatedData, handleReset } = generatorProps;
+  const reduceMotion = useReducedMotion();
 
   return (
-    <div className="w-full max-w-5xl mx-auto">
-      {/* Page Header */}
-      <div className="mb-10 max-w-2xl">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 mb-4 rounded-md bg-white border border-ink/10 text-[11px] font-semibold tracking-wide uppercase text-ink-soft shadow-sm">
-          <AudioLines size={12} className="text-signal" />
-          Claude Opus 5.5 Pipeline
-        </div>
-        <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-semibold text-ink tracking-tight mb-3">
-          Synthesize new content.
-        </h1>
-        <p className="text-base md:text-lg text-ink-soft leading-relaxed">
-          Paste a YouTube or blog URL below. The engine will extract the
-          transcript, inject your brand voice parameters, and format it for your
-          chosen platforms.
-        </p>
+    <div className="relative w-full max-w-5xl mx-auto pb-24 min-h-[80vh]">
+      {/* Ambient AI Background (Dot grid + Multi-layered glow) */}
+      <div className="absolute inset-0 -z-20 pointer-events-none overflow-hidden [mask-image:linear-gradient(to_bottom,white_20%,transparent_80%)]">
+        {/* Architectural Dot Grid */}
+        <div className="absolute inset-0 bg-[radial-gradient(var(--color-ink)_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.03]" />
+
+        {/* Animated Primary Signal Glow */}
+        <motion.div
+          animate={
+            reduceMotion
+              ? {}
+              : {
+                  scale: [1, 1.05, 1],
+                  opacity: [0.4, 0.5, 0.4],
+                }
+          }
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-32 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full blur-[100px]"
+          style={{
+            background:
+              "radial-gradient(closest-side, color-mix(in srgb, var(--color-signal) 20%, transparent), transparent)",
+          }}
+        />
       </div>
 
-      {/* The Input Engine */}
-      <motion.div
-        layout
-        className="bg-white border border-ink/10 rounded-[1.5rem] p-2 shadow-sm mb-10 relative overflow-hidden"
+      {/* Premium Page Header */}
+      <motion.header
+        initial={reduceMotion ? false : "hidden"}
+        animate="show"
+        variants={{ show: { transition: { staggerChildren: 0.1 } } }}
+        className="mb-14 max-w-2xl relative z-10"
       >
-        <form
-          onSubmit={handleGenerate}
-          className="relative z-10 bg-paper-dim/20 rounded-2xl border border-white p-4 md:p-6 shadow-inner"
+        {/* Status Badge */}
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, y: 10 },
+            show: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.5, ease: EASE },
+            },
+          }}
+          className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-ink/10 bg-white/60 py-1.5 pl-2 pr-4 text-xs font-bold text-ink shadow-[0_2px_8px_rgba(0,0,0,0.04)] backdrop-blur-md"
         >
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1 group">
-              <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-ink-faint transition-colors group-focus-within:text-signal">
-                <Link2 size={20} strokeWidth={2.5} />
-              </div>
-              <input
-                type="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://youtube.com/watch?v=..."
-                disabled={engineState !== "idle"}
-                required
-                className="w-full pl-14 pr-5 py-4 bg-white border border-ink/10 rounded-xl text-base focus:outline-none focus:ring-4 focus:ring-signal/10 focus:border-signal transition-all placeholder:text-ink-faint disabled:opacity-50 font-mono shadow-sm"
+          <div className="relative flex h-5 w-5 items-center justify-center rounded-full bg-signal/15">
+            {engineState === "processing" ? (
+              <div className="absolute inset-0 rounded-full border border-signal border-t-transparent animate-spin" />
+            ) : (
+              <motion.div
+                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute inset-0 rounded-full bg-signal/30 blur-sm"
               />
-            </div>
-
-            <button
-              type="submit"
-              disabled={engineState !== "idle"}
-              className="px-8 py-4 bg-ink text-paper rounded-xl font-medium text-base transition-all hover:bg-ink-soft hover:shadow-xl hover:shadow-ink/20 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2.5 whitespace-nowrap group"
-            >
-              <Sparkles
-                size={18}
-                className="text-paper transition-transform group-hover:scale-110 group-hover:rotate-12"
-              />
-              Synthesize Now
-            </button>
+            )}
+            <AudioLines size={12} className="text-signal relative z-10" />
           </div>
+          Sociarig Synthesis Engine
+        </motion.div>
 
-          <div className="mt-4 flex items-center gap-4 px-1">
-            <span className="flex items-center gap-1.5 text-xs font-medium text-ink-soft">
-              <Settings2 size={14} className="text-ink-faint" />
-              Target:{" "}
-              <span className="text-ink">Thread, Carousel, Newsletter</span>
-            </span>
-          </div>
-        </form>
+        {/* Gradient Headline */}
+        <motion.h1
+          variants={{
+            hidden: { opacity: 0, y: 14 },
+            show: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.6, ease: EASE },
+            },
+          }}
+          className="font-display flex space-x-1.5 text-3xl md:text-4xl font-semibold text-ink tracking-tight mb-2"
+        >
+          Synthesize content.
+          <Sparkles
+            className="text-signal/50 hidden md:block"
+            size={25}
+            strokeWidth={1.5}
+          />
+        </motion.h1>
 
-        {/* Processing State Overlay */}
+        {/* Subheadline */}
+        <motion.p
+          variants={{
+            hidden: { opacity: 0, y: 14 },
+            show: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.6, ease: EASE },
+            },
+          }}
+          className="max-w-xl text-base leading-relaxed text-ink-soft md:text-lg"
+        >
+          Provide a source URL or a raw idea. Sociarig will inject your brand
+          voice and architect the content perfectly for your selected platforms.
+        </motion.p>
+      </motion.header>
+
+      {/* 3. The Decoupled Input Engine & Overlay */}
+      <div className="relative">
+        <motion.div
+          animate={{
+            filter:
+              engineState === "processing"
+                ? "blur(4px) saturate(0.5)"
+                : "blur(0px) saturate(1)",
+            opacity: engineState === "processing" ? 0.4 : 1,
+            scale: engineState === "processing" ? 0.98 : 1,
+          }}
+          transition={SPRING}
+          className="origin-top relative z-0"
+        >
+          <GeneratorForm {...generatorProps} />
+        </motion.div>
+
+        {/* Cinematic Processing State Overlay */}
         <AnimatePresence>
           {engineState === "processing" && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-white/60 backdrop-blur-md z-20 flex flex-col items-center justify-center rounded-[1.5rem]"
+              transition={{ duration: 0.4 }}
+              role="status"
+              aria-live="polite"
+              className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-[2rem] bg-paper-dim/30 backdrop-blur-sm"
             >
-              <div className="flex items-center gap-4 bg-white px-6 py-4 rounded-2xl shadow-xl shadow-ink/5 border border-ink/10">
-                <div className="relative flex items-center justify-center w-6 h-6">
-                  <div className="absolute inset-0 border-2 border-ink/10 rounded-full" />
-                  <div className="absolute inset-0 border-2 border-transparent border-t-signal rounded-full animate-spin" />
+              <motion.div
+                initial={
+                  reduceMotion ? false : { opacity: 0, scale: 0.9, y: 10 }
+                }
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                transition={SPRING}
+                className="relative w-[min(90%,24rem)] overflow-hidden rounded-2xl border border-ink/10 bg-white/90 backdrop-blur-xl shadow-2xl shadow-ink/10"
+              >
+                {/* Shimmer sweeping effect */}
+                <motion.div
+                  className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/60 to-transparent -skew-x-12"
+                  animate={{ x: ["-200%", "200%"] }}
+                  transition={{
+                    duration: 2,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatDelay: 1,
+                  }}
+                />
+
+                <div className="relative z-10 flex items-center gap-5 px-6 py-5">
+                  {/* Advanced Spinner */}
+                  <div className="relative flex h-10 w-10 shrink-0 items-center justify-center">
+                    <div className="absolute inset-0 rounded-full border-[3px] border-ink/5" />
+                    <div className="absolute inset-0 animate-spin rounded-full border-[3px] border-transparent border-t-signal border-r-signal/30" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-signal shadow-[0_0_10px_var(--color-signal)] animate-pulse" />
+                  </div>
+
+                  <div className="flex min-w-0 flex-col">
+                    <span className="text-sm font-bold text-ink tracking-wide">
+                      Engine is working...
+                    </span>
+                    <span className="truncate text-xs font-medium text-ink-soft mt-0.5">
+                      {inputMode === "url"
+                        ? "Scraping content & aligning vectors"
+                        : "Structuring idea & aligning vectors"}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-ink">
-                    Engine is working...
-                  </span>
-                  <span className="text-[11px] font-medium text-ink-soft animate-pulse">
-                    Aligning voice vectors & formatting outputs
-                  </span>
+
+                {/* Glowing indeterminate progress rail */}
+                <div className="relative h-1 w-full bg-ink/5 overflow-hidden">
+                  <motion.div
+                    className="absolute inset-y-0 w-1/2 bg-signal shadow-[0_0_8px_var(--color-signal)] rounded-full"
+                    animate={
+                      reduceMotion ? undefined : { left: ["-50%", "100%"] }
+                    }
+                    transition={{
+                      duration: 1.5,
+                      ease: "easeInOut",
+                      repeat: Infinity,
+                    }}
+                  />
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
 
       {/* The Output Area */}
       <AnimatePresence>
-        {engineState === "completed" && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-6"
+        {engineState === "completed" && generatedData && (
+          <motion.section
+            initial={{ opacity: 0, y: 30, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.98 }}
+            transition={SPRING}
+            className="mt-16 space-y-8 relative z-10"
           >
-            <div className="flex items-center justify-between">
-              <h2 className="font-display text-2xl font-bold text-ink">
-                Generated Assets
-              </h2>
+            {/* Output Header */}
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-t border-ink/10 pt-10">
+              <div>
+                <motion.div
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  className="h-1 w-12 bg-signal rounded-full mb-4"
+                />
+                <h2 className="font-display text-2xl font-bold tracking-tight text-ink md:text-3xl">
+                  Generated Assets
+                </h2>
+                <p className="text-sm text-ink-soft mt-1">
+                  Review, edit, and export your synthesized content.
+                </p>
+              </div>
+
               <button
-                onClick={() => {
-                  setEngineState("idle");
-                  setUrl("");
-                }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-ink/10 text-sm font-medium text-ink-soft hover:text-ink hover:bg-paper transition-colors shadow-sm"
+                onClick={handleReset}
+                className="group cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl border border-ink/10 bg-white px-5 py-2.5 text-sm font-bold text-ink shadow-sm transition-all hover:border-ink/20 hover:bg-paper hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/40 focus-visible:ring-offset-2 active:scale-95"
               >
-                <RefreshCcw size={14} />
+                <RefreshCcw
+                  size={16}
+                  className="transition-transform duration-500 group-hover:-rotate-180 text-ink-soft group-hover:text-signal"
+                />
                 Start Over
               </button>
             </div>
 
-            {/* THIS IS WHERE THE EXPORT CARDS APPEAR */}
-            <ExportWorkflows
-              content={{
-                twitter: [
-                  "I spent 4 years building SaaS products...",
-                  "1/ The biggest mistake...",
-                ],
-                threads: [
-                  "I spent 4 years building SaaS products...",
-                  "The biggest mistake...",
-                ],
-                linkedin:
-                  "Stop putting heavy AI generation directly in your Next.js API routes...",
-                instagram:
-                  "Serverless architecture is a trap... \n\n#buildinpublic",
-                newsletter: {
-                  subject: "The Serverless Trap",
-                  html: "<p>Hey everyone,</p>",
-                },
-              }}
-            />
-            {/* END OF EXPORT CARDS */}
-          </motion.div>
+            {/* The Workflows Component */}
+            <div className="bg-white rounded-[2rem] border border-ink/10 shadow-sm p-1">
+              <ExportWorkflows content={generatedData} />
+            </div>
+          </motion.section>
         )}
       </AnimatePresence>
     </div>

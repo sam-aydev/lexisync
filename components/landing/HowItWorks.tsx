@@ -175,7 +175,7 @@ export default function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative py-24 md:py-32 px-6 lg:px-24"
+      className="relative py-8 md:py-32 px-6 lg:px-24"
       ref={containerRef}
     >
       <div className="max-w-[var(--container-content)] mx-auto relative">
@@ -200,7 +200,7 @@ export default function HowItWorks() {
 
         {/* Dynamic Card Grid (Desktop) / Sticky Stack (Mobile) */}
         {/* On mobile, we add extra padding-bottom to allow scrolling space for the sticky effect */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 relative pb-[50vh] md:pb-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 relative pb-0">
           {/* Desktop Connection Line */}
           <div className="hidden md:block absolute top-[120px] left-10 right-10 h-px bg-gradient-to-r from-transparent via-signal/30 to-transparent z-0" />
 

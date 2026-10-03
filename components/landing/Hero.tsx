@@ -49,7 +49,7 @@ export default function Hero() {
   }, [activeStep]);
 
   return (
-    <section className="relative pt-32 pb-8 md:pt-40 md:pb-32 px-10 overflow-hidden">
+    <section className="relative pt-32 pb-8 md:pt-40 md:pb-32 px-2 md:px-10 overflow-hidden">
       {/* Ambient background glow */}
       <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[150%] md:w-[100%] h-[800px] bg-[radial-gradient(ellipse_at_top,_var(--color-signal)_0%,_transparent_50%)] opacity-[0.06] pointer-events-none" />
 
@@ -66,25 +66,25 @@ export default function Hero() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-signal opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-signal"></span>
             </span>
-            The Omnipresence Engine
+            The Sociarig Engine
           </div>
 
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] text-balance mb-8">
-            Turn one video into a month of content.{" "}
+          <h1 className="font- font-sans text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] text-balance mb-8">
+            Turn one link or idea into a month of content.{" "}
             <br className="hidden md:block" />
             <span className="text-ink-faint">In your exact voice.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-ink-soft max-w-2xl text-balance mb-10">
-            Stop sounding like a robot. Paste a YouTube URL, and instantly
+            Stop sounding like a robot. Paste a YouTube URL or Idea, and instantly
             generate Twitter threads, LinkedIn carousels, and newsletters tuned
             perfectly to your tone.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <Link
-              href="/auth"
-              className="group inline-flex justify-center items-center gap-2 px-8 py-4 bg-ink text-paper rounded-full font-medium hover:bg-ink-soft transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(18,21,27,0.5)] hover:shadow-none hover:translate-y-[2px]"
+              href="/auth/signup"
+              className="group inline-flex justify-center items-center gap-2 w-5/6 mx-auto md:w-full px-8 py-4 bg-black text-paper rounded-full font-medium hover:bg-green-700 transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(18,21,27,0.5)] hover:shadow-none hover:translate-y-[2px]"
             >
               Start Generating Free
               <svg
@@ -285,7 +285,7 @@ export default function Hero() {
                         <br />
                         <br />
                         We stopped doing that. Instead, we built an engine that
-                        turns 1 video into 30 days of distribution...
+                        turns 1 Link into 30 days of distribution...
                       </p>
                     </motion.div>
 
